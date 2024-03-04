@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                catchError(buildResult:'UNSTABLE',stageResult:'UNSTABLE',message:'errordetectado'){    
+                    
+                    script{
+                        try {
+                            sh 'Hello World'
+                            echo 'Succeeded!'
+                        } catch (err) {
+                            echo "Failed: ${err}"
+                            
+                            emailext body: 'Test Message',
+                            subject: 'Test Subject',
+                            to: 'danielmundero123@gmail.com'
+                            
+                            throw err
+                        }
+                    }
+                }
+            }
+        }
+        stage('stage2'){
+            steps{
+                echo 'ultimopaso'
+            }
+            
+        }
+        
+    
+    }
+}
